@@ -22,6 +22,7 @@ _ENV_LOADED = False
 
 
 def _load_env_once():
+    """Load environment variables from .env file, ensuring it only runs once."""
     global _ENV_LOADED
     if not _ENV_LOADED:
         from dotenv import load_dotenv
@@ -35,6 +36,7 @@ def _load_env_once():
 
 
 def _extract_json_from_text(text: str) -> Optional[dict]:
+    """Extract a JSON object from a raw text string, handling code blocks."""
     text = text.strip()
 
     cleaned = re.sub(r'```(?:json)?\s*', '', text)
