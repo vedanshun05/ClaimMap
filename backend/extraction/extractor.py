@@ -128,7 +128,8 @@ async def _call_llm_async(system_prompt: str, user_prompt: str, max_retries: int
             try:
                 import litellm
 
-                model = os.getenv("DEFAULT_MODEL", "nvidia_nim/meta/llama-3.3-70b-instruct")
+                model = os.getenv("DEFAULT_MODEL", "nvidia_nim/meta/llama-3.1-8b-instruct")
+
 
                 messages = [
                     {"role": "system", "content": system_prompt},

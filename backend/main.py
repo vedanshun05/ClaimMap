@@ -62,7 +62,8 @@ async def debug():
     # Try to see if keys are in environment or loaded
     nvidia_key = os.getenv("NVIDIA_NIM_API_KEY")
     gemini_key = os.getenv("GEMINI_API_KEY")
-    default_model = os.getenv("DEFAULT_MODEL", "nvidia_nim/meta/llama-3.3-70b-instruct")
+    default_model = os.getenv("DEFAULT_MODEL", "nvidia_nim/meta/llama-3.1-8b-instruct")
+
     
     test_result = None
     test_error = None

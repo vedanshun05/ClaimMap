@@ -43,7 +43,8 @@ class RelationDetector:
             if api_key:
                 os.environ["NVIDIA_API_KEY"] = api_key
 
-            model = os.getenv("DEFAULT_MODEL", "nvidia_nim/meta/llama-3.3-70b-instruct")
+            model = os.getenv("DEFAULT_MODEL", "nvidia_nim/meta/llama-3.1-8b-instruct")
+
 
             messages = [
                 {"role": "system", "content": system_prompt},
