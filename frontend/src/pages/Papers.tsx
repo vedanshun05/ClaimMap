@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { listPapers, extractClaims } from '../api/client';
+import { listPapers, extractClaims, API_BASE } from '../api/client';
 import type { Paper, Claim } from '../api/client';
 import { ShinyButton } from '@/components/ui/shiny-button';
 import { Badge } from '@/components/ui/badge';
@@ -62,7 +62,7 @@ export default function Papers() {
     }));
 
     try {
-      const evtSource = new EventSource(`http://localhost:8000/api/papers/${encodeURIComponent(paperId)}/extract/stream`);
+      const evtSource = new EventSource(`${API_BASE}/papers/${encodeURIComponent(paperId)}/extract/stream`);
       let useEventSource = true;
 
       evtSource.onmessage = (event) => {
