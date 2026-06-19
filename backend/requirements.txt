@@ -6,3 +6,5 @@ arxiv>=1.4.0
 PyMuPDF>=1.23.0
 python-dotenv>=1.0.0
 litellm>=1.0.0
+python-multipart>=0.0.7
+
