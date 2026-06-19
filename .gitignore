@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+*.db
+backend/database/*.db
+.env
+.env.local
+
+# Node / React
+node_modules/
+dist/
+.DS_Store
+.vercel
