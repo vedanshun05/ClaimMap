@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="none">
+  <defs>
+    <linearGradient id="network-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a78bfa" />
+      <stop offset="50%" stop-color="#818cf8" />
+      <stop offset="100%" stop-color="#22d3ee" />
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="6" height="6" rx="1.5" stroke="url(#network-gradient)" stroke-width="2.5" fill="rgba(129, 140, 248, 0.1)" />
+  <rect x="2" y="16" width="6" height="6" rx="1.5" stroke="url(#network-gradient)" stroke-width="2.5" fill="rgba(129, 140, 248, 0.1)" />
+  <rect x="16" y="2" width="6" height="6" rx="1.5" stroke="url(#network-gradient)" stroke-width="2.5" fill="rgba(129, 140, 248, 0.1)" />
+  <path d="M16 5h-4a2 2 0 0 0-2 2v9" stroke="url(#network-gradient)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M8 19h8" stroke="url(#network-gradient)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
