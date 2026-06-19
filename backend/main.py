@@ -52,6 +52,49 @@ async def health():
     return {"status": "healthy"}
 
 
+@app.get("/api/debug")
+async def debug():
+    """Temporary debug endpoint to inspect environment variables and test LLM connectivity."""
+    import os
+    import litellm
+    from pathlib import Path
+    
+    # Try to see if keys are in environment or loaded
+    nvidia_key = os.getenv("NVIDIA_NIM_API_KEY")
+    gemini_key = os.getenv("GEMINI_API_KEY")
+    default_model = os.getenv("DEFAULT_MODEL", "nvidia_nim/meta/llama-3.3-70b-instruct")
+    
+    test_result = None
+    test_error = None
+    
+    try:
+        # Re-initialize key mapping as in extractor
+        api_key = nvidia_key or gemini_key
+        if api_key:
+            os.environ["NVIDIA_API_KEY"] = api_key
+            
+        response = await litellm.acompletion(
+            model=default_model,
+            messages=[{"role": "user", "content": "Hello"}],
+            temperature=0.1,
+            timeout=15.0
+        )
+        test_result = response.choices[0].message.content
+    except Exception as e:
+        test_error = str(e)
+        
+    return {
+        "default_model": default_model,
+        "nvidia_key_present": bool(nvidia_key),
+        "gemini_key_present": bool(gemini_key),
+        "nvidia_key_prefix": nvidia_key[:8] if nvidia_key else None,
+        "gemini_key_prefix": gemini_key[:8] if gemini_key else None,
+        "test_result": test_result,
+        "test_error": test_error
+    }
+
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
