@@ -34,27 +34,25 @@ class RelationDetector:
             return self.llm_client.generate_json(user_prompt, system_prompt)
 
         try:
+            from llm_fallback import get_llm_config
             import litellm
             from dotenv import load_dotenv
 
             load_dotenv()
-
-            api_key = os.getenv("OPENCODE_API_KEY")
-            model = os.getenv("DEFAULT_MODEL", "openai/deepseek-v4-flash-free")
-            api_base = "https://opencode.ai/zen/v1"
+            model, api_base, api_key = get_llm_config()
 
             messages = [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ]
 
-            response = await litellm.acompletion(
-                model=model,
-                api_base=api_base,
-                api_key=api_key,
-                messages=messages,
-                temperature=0.1
-            )
+            kwargs = dict(model=model, messages=messages, temperature=0.1)
+            if api_base:
+                kwargs["api_base"] = api_base
+            if api_key:
+                kwargs["api_key"] = api_key
+
+            response = await litellm.acompletion(**kwargs)
 
             text = response.choices[0].message.content
             return self._parse_json_response(text)

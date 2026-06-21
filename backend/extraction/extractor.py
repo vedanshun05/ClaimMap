@@ -116,33 +116,29 @@ def _process_claims(claims_data: list[dict], section_name: str, page_number: int
     return claims
 
 
-OPENCODE_API_BASE = "https://opencode.ai/zen/v1"
-
-
 async def _call_llm_async(system_prompt: str, user_prompt: str, max_retries: int = MAX_RETRIES) -> Optional[str]:
     """Async LLM call with semaphore-limited concurrency, retry, and rate-limit handling."""
-    import os
+    from llm_fallback import get_llm_config
+
+    model, api_base, api_key = get_llm_config()
 
     async with _LLM_SEMAPHORE:
         for attempt in range(max_retries):
             try:
                 import litellm
 
-                model = os.getenv("DEFAULT_MODEL", "openai/deepseek-v4-flash-free")
-                api_key = os.getenv("OPENCODE_API_KEY")
-
                 messages = [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
                 ]
 
-                response = await litellm.acompletion(
-                    model=model,
-                    api_base=OPENCODE_API_BASE,
-                    api_key=api_key,
-                    messages=messages,
-                    temperature=0.1
-                )
+                kwargs = dict(model=model, messages=messages, temperature=0.1)
+                if api_base:
+                    kwargs["api_base"] = api_base
+                if api_key:
+                    kwargs["api_key"] = api_key
+
+                response = await litellm.acompletion(**kwargs)
 
                 return response.choices[0].message.content
 

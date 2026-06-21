@@ -61,13 +61,10 @@ def _extract_json_from_text(text: str) -> Optional[dict]:
 
 async def _call_llm_async(system_prompt: str, user_prompt: str) -> Optional[str]:
     """Async LLM call for brief generation."""
-    import os
+    from llm_fallback import get_llm_config
 
     _load_env_once()
-
-    api_key = os.getenv("OPENCODE_API_KEY")
-    model = os.getenv("DEFAULT_MODEL", "openai/deepseek-v4-flash-free")
-    api_base = "https://opencode.ai/zen/v1"
+    model, api_base, api_key = get_llm_config()
 
     for attempt in range(MAX_RETRIES):
         try:
@@ -78,14 +75,13 @@ async def _call_llm_async(system_prompt: str, user_prompt: str) -> Optional[str]
                 {"role": "user", "content": user_prompt}
             ]
 
-            response = await litellm.acompletion(
-                model=model,
-                api_base=api_base,
-                api_key=api_key,
-                messages=messages,
-                temperature=0.3
-            )
+            kwargs = dict(model=model, messages=messages, temperature=0.3)
+            if api_base:
+                kwargs["api_base"] = api_base
+            if api_key:
+                kwargs["api_key"] = api_key
 
+            response = await litellm.acompletion(**kwargs)
             return response.choices[0].message.content
 
         except Exception as e:
