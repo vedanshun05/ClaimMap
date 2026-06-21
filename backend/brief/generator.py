@@ -29,9 +29,6 @@ def _load_env_once():
         import os
         load_dotenv(Path(__file__).parent.parent.parent / ".env", override=False)
         load_dotenv(Path(__file__).parent.parent / ".env", override=False)
-        api_key = os.getenv("NVIDIA_NIM_API_KEY") or os.getenv("GEMINI_API_KEY")
-        if api_key:
-            os.environ["NVIDIA_API_KEY"] = api_key
         _ENV_LOADED = True
 
 
@@ -68,12 +65,13 @@ async def _call_llm_async(system_prompt: str, user_prompt: str) -> Optional[str]
 
     _load_env_once()
 
+    api_key = os.getenv("OPENCODE_API_KEY")
+    model = os.getenv("DEFAULT_MODEL", "openai/deepseek-v4-flash-free")
+    api_base = "https://opencode.ai/zen/v1"
+
     for attempt in range(MAX_RETRIES):
         try:
             import litellm
-
-            model = os.getenv("DEFAULT_MODEL", "nvidia_nim/meta/llama-3.1-8b-instruct")
-
 
             messages = [
                 {"role": "system", "content": system_prompt},
@@ -82,6 +80,8 @@ async def _call_llm_async(system_prompt: str, user_prompt: str) -> Optional[str]
 
             response = await litellm.acompletion(
                 model=model,
+                api_base=api_base,
+                api_key=api_key,
                 messages=messages,
                 temperature=0.3
             )

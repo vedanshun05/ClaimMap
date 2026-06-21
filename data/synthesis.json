@@ -1,0 +1,33 @@
+{
+  "themes": [
+    {
+      "theme_id": "architecture",
+      "theme_name": "Model Architecture",
+      "claim_ids": [
+        "arXiv:1706.03762v7_claim_003",
+        "arXiv:1706.03762v7_claim_004",
+        "arXiv:1706.03762v7_claim_009"
+      ],
+      "consensus": "weak",
+      "agreement_count": 0,
+      "conflict_count": 0,
+      "summary": "Weak consensus with limited supporting evidence (0/3)."
+    },
+    {
+      "theme_id": "comparison",
+      "theme_name": "Comparison with Baselines",
+      "claim_ids": [
+        "arXiv:1706.03762v7_claim_002"
+      ],
+      "consensus": "weak",
+      "agreement_count": 0,
+      "conflict_count": 0,
+      "summary": "Weak consensus with limited supporting evidence (0/1)."
+    }
+  ],
+  "areas_of_consensus": [],
+  "areas_of_conflict": [],
+  "evidence_gaps": [
+    "Comparison with Baselines: Single-source claims only"
+  ]
+}

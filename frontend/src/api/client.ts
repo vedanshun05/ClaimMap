@@ -1,13 +1,14 @@
-import axios from 'axios';
+import axios from "axios";
 
-export const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
-
-
+export const API_BASE =
+  window.location.hostname === "localhost"
+    ? "http://localhost:8000/api"
+    : "https://claimmap-backend.onrender.com/api";
 
 const api = axios.create({
   baseURL: API_BASE,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -48,7 +49,7 @@ export interface Claim {
   id: number;
   paper_id: string;
   text: string;
-  claim_type: 'finding' | 'hypothesis' | 'limitation';
+  claim_type: "finding" | "hypothesis" | "limitation";
   source_section: string;
   source_sentence: string;
   page_number: number;
@@ -66,7 +67,7 @@ export interface TopicGroup {
 export interface Relation {
   id?: number;
   claim_ids: string[];
-  relation_type: 'agrees' | 'contradicts' | 'supports' | 'gap';
+  relation_type: "agrees" | "contradicts" | "supports" | "gap";
   explanation: string;
   confidence: number;
 }
@@ -76,7 +77,7 @@ export interface ConsensusScore {
   total_claims: number;
   agreement_ratio: number;
   has_conflict: boolean;
-  evidence_strength: 'strong' | 'moderate' | 'thin';
+  evidence_strength: "strong" | "moderate" | "thin";
 }
 
 export interface SynthesisResult {
@@ -104,37 +105,58 @@ export interface ThemeSummary {
   theme: string;
   summary: string;
   supporting_claim_ids: string[];
-  consensus_level: 'strong' | 'moderate' | 'thin';
+  consensus_level: "strong" | "moderate" | "thin";
   evidence_count?: number;
 }
 
 export interface EvidenceStrength {
   finding: string;
-  strength: 'strong' | 'moderate' | 'thin';
+  strength: "strong" | "moderate" | "thin";
   supporting_papers: number;
 }
 
-export const searchPapers = async (query: string, maxResults: number = 10): Promise<PaperSearchResult[]> => {
-  const response = await api.post('/search', { query, max_results: maxResults });
+export const searchPapers = async (
+  query: string,
+  maxResults: number = 10,
+): Promise<PaperSearchResult[]> => {
+  const response = await api.post("/search", {
+    query,
+    max_results: maxResults,
+  });
   return response.data.papers ?? [];
 };
 
-export const ingestPaper = async (paperId: string): Promise<{ success: boolean; paper_id: string; title: string; sections_count: number }> => {
+export const ingestPaper = async (
+  paperId: string,
+): Promise<{
+  success: boolean;
+  paper_id: string;
+  title: string;
+  sections_count: number;
+}> => {
   const response = await api.post(`/ingest/${encodeURIComponent(paperId)}`);
   return response.data;
 };
 
-export const uploadPdf = async (file: File): Promise<{ success: boolean; paper_id: string; title: string; sections_count: number; filename: string }> => {
+export const uploadPdf = async (
+  file: File,
+): Promise<{
+  success: boolean;
+  paper_id: string;
+  title: string;
+  sections_count: number;
+  filename: string;
+}> => {
   const formData = new FormData();
-  formData.append('file', file);
-  const response = await api.post('/upload', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
+  formData.append("file", file);
+  const response = await api.post("/upload", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
   });
   return response.data;
 };
 
 export const listPapers = async (): Promise<Paper[]> => {
-  const response = await api.get('/papers');
+  const response = await api.get("/papers");
   return response.data ?? [];
 };
 
@@ -148,29 +170,55 @@ export const getClaims = async (paperId: string): Promise<Claim[]> => {
   return response.data ?? [];
 };
 
-export const extractClaims = async (paperId: string): Promise<{ paper_id: string; claims: Claim[]; extraction_success: boolean; message: string }> => {
+export const extractClaims = async (
+  paperId: string,
+): Promise<{
+  paper_id: string;
+  claims: Claim[];
+  extraction_success: boolean;
+  message: string;
+}> => {
   const response = await api.post(`/papers/${paperId}/extract`);
   return response.data;
 };
 
 export const getAllClaims = async (): Promise<Claim[]> => {
-  const response = await api.get('/claims/all');
+  const response = await api.get("/claims/all");
   return response.data ?? [];
 };
 
-export const getSynthesis = async (): Promise<{ synthesis: SynthesisResult; success: boolean; message: string }> => {
-  const response = await api.get('/synthesis');
+export const getSynthesis = async (): Promise<{
+  synthesis: SynthesisResult;
+  success: boolean;
+  message: string;
+}> => {
+  const response = await api.get("/synthesis");
   return response.data;
 };
 
-export const getBrief = async (query: string = 'Research on deep learning'): Promise<{ brief: ResearchBrief; success: boolean; message: string }> => {
-  const response = await api.get('/brief', { params: { query } });
+export const getBrief = async (
+  query: string = "Research on deep learning",
+): Promise<{ brief: ResearchBrief; success: boolean; message: string }> => {
+  const response = await api.get("/brief", { params: { query } });
   return response.data;
 };
 
-export const exportBrief = async (format: 'md' | 'bibtex' | 'json', query: string = 'Research on deep learning'): Promise<{ content: string; format: string; success: boolean; message: string }> => {
-  const response = await api.post('/brief/export', { format }, { params: { query } });
+export const exportBrief = async (
+  format: "md" | "bibtex" | "json",
+  query: string = "Research on deep learning",
+): Promise<{
+  content: string;
+  format: string;
+  success: boolean;
+  message: string;
+}> => {
+  const response = await api.post(
+    "/brief/export",
+    { format },
+    { params: { query } },
+  );
   return response.data;
 };
 
 export default api;
+

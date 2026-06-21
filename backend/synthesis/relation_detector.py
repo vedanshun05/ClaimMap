@@ -39,12 +39,9 @@ class RelationDetector:
 
             load_dotenv()
 
-            api_key = os.getenv("NVIDIA_NIM_API_KEY") or os.getenv("GEMINI_API_KEY")
-            if api_key:
-                os.environ["NVIDIA_API_KEY"] = api_key
-
-            model = os.getenv("DEFAULT_MODEL", "nvidia_nim/meta/llama-3.1-8b-instruct")
-
+            api_key = os.getenv("OPENCODE_API_KEY")
+            model = os.getenv("DEFAULT_MODEL", "openai/deepseek-v4-flash-free")
+            api_base = "https://opencode.ai/zen/v1"
 
             messages = [
                 {"role": "system", "content": system_prompt},
@@ -53,6 +50,8 @@ class RelationDetector:
 
             response = await litellm.acompletion(
                 model=model,
+                api_base=api_base,
+                api_key=api_key,
                 messages=messages,
                 temperature=0.1
             )

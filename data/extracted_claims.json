@@ -1,0 +1,92 @@
+[
+  {
+    "claim_id": "arXiv:1706.03762v7_claim_001",
+    "paper_id": "arXiv:1706.03762v7",
+    "claim_type": "finding",
+    "claim_text": "Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles, by over 2 BLEU.",
+    "source_section": "Abstract",
+    "source_location": "page 1, paragraph 1",
+    "confidence": 1.0
+  },
+  {
+    "claim_id": "arXiv:1706.03762v7_claim_002",
+    "paper_id": "arXiv:1706.03762v7",
+    "claim_type": "finding",
+    "claim_text": "On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.8 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature.",
+    "source_section": "Abstract",
+    "source_location": "page 1, paragraph 1",
+    "confidence": 1.0
+  },
+  {
+    "claim_id": "arXiv:1706.03762v7_claim_003",
+    "paper_id": "arXiv:1706.03762v7",
+    "claim_type": "hypothesis",
+    "claim_text": "We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely.",
+    "source_section": "Abstract",
+    "source_location": "page 1, paragraph 1",
+    "confidence": 0.8
+  },
+  {
+    "claim_id": "arXiv:1706.03762v7_claim_004",
+    "paper_id": "arXiv:1706.03762v7",
+    "claim_type": "finding",
+    "claim_text": "The Transformer allows for significantly more parallelization and can reach a new state of the art in translation quality after being trained for as little as twelve hours on eight P100 GPUs.",
+    "source_section": "Introduction",
+    "source_location": "page 2, paragraph 2",
+    "confidence": 1.0
+  },
+  {
+    "claim_id": "arXiv:1706.03762v7_claim_005",
+    "paper_id": "arXiv:1706.03762v7",
+    "claim_type": "limitation",
+    "claim_text": "This makes it more difficult to learn dependencies between distant positions",
+    "source_section": "Background",
+    "source_location": "page 3, paragraph 1",
+    "confidence": 0.9
+  },
+  {
+    "claim_id": "arXiv:1706.03762v7_claim_006",
+    "paper_id": "arXiv:1706.03762v7",
+    "claim_type": "finding",
+    "claim_text": "Self-attention has been used successfully in a variety of tasks including reading comprehension, abstractive summarization, textual entailment and learning task-independent sentence representations",
+    "source_section": "Background",
+    "source_location": "page 3, paragraph 2",
+    "confidence": 1.0
+  },
+  {
+    "claim_id": "arXiv:1706.03762v7_claim_007",
+    "paper_id": "arXiv:1706.03762v7",
+    "claim_type": "hypothesis",
+    "claim_text": "We suspect that for large values of dk, the dot products grow large in magnitude, pushing the softmax function into regions where it has extremely small gradients",
+    "source_section": "Model Architecture",
+    "source_location": "page 5, paragraph 2",
+    "confidence": 0.7
+  },
+  {
+    "claim_id": "arXiv:1706.03762v7_claim_008",
+    "paper_id": "arXiv:1706.03762v7",
+    "claim_type": "finding",
+    "claim_text": "Multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions.",
+    "source_section": "Model Architecture",
+    "source_location": "page 6, paragraph 1",
+    "confidence": 1.0
+  },
+  {
+    "claim_id": "arXiv:1706.03762v7_claim_009",
+    "paper_id": "arXiv:1706.03762v7",
+    "claim_type": "finding",
+    "claim_text": "The Transformer uses multi-head attention in three different ways: encoder-decoder attention, self-attention in the encoder, and self-attention in the decoder",
+    "source_section": "Model Architecture",
+    "source_location": "page 7, paragraph 1",
+    "confidence": 1.0
+  },
+  {
+    "claim_id": "arXiv:1706.03762v7_claim_010",
+    "paper_id": "arXiv:1706.03762v7",
+    "claim_type": "limitation",
+    "claim_text": "We need to prevent leftward information flow in the decoder to preserve the auto-regressive property",
+    "source_section": "Model Architecture",
+    "source_location": "page 8, paragraph 2",
+    "confidence": 0.9
+  }
+]
