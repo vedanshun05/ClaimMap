@@ -34,27 +34,14 @@ class RelationDetector:
             return self.llm_client.generate_json(user_prompt, system_prompt)
 
         try:
-            from llm_fallback import get_llm_config
-            import litellm
-            from dotenv import load_dotenv
-
-            load_dotenv()
-            model, api_base, api_key = get_llm_config()
+            from llm_fallback import llm_completion
 
             messages = [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ]
 
-            kwargs = dict(model=model, messages=messages, temperature=0.1)
-            if api_base:
-                kwargs["api_base"] = api_base
-            if api_key:
-                kwargs["api_key"] = api_key
-
-            response = await litellm.acompletion(**kwargs)
-
-            text = response.choices[0].message.content
+            text = await llm_completion(messages=messages, temperature=0.1)
             return self._parse_json_response(text)
 
         except Exception as e:

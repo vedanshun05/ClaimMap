@@ -118,29 +118,19 @@ def _process_claims(claims_data: list[dict], section_name: str, page_number: int
 
 async def _call_llm_async(system_prompt: str, user_prompt: str, max_retries: int = MAX_RETRIES) -> Optional[str]:
     """Async LLM call with semaphore-limited concurrency, retry, and rate-limit handling."""
-    from llm_fallback import get_llm_config
-
-    model, api_base, api_key = get_llm_config()
+    from llm_fallback import llm_completion
 
     async with _LLM_SEMAPHORE:
         for attempt in range(max_retries):
             try:
-                import litellm
-
                 messages = [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
                 ]
 
-                kwargs = dict(model=model, messages=messages, temperature=0.1)
-                if api_base:
-                    kwargs["api_base"] = api_base
-                if api_key:
-                    kwargs["api_key"] = api_key
+                response_text = await llm_completion(messages=messages, temperature=0.1)
 
-                response = await litellm.acompletion(**kwargs)
-
-                return response.choices[0].message.content
+                return response_text
 
             except Exception as e:
                 error_str = str(e)

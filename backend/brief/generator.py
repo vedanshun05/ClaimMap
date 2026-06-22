@@ -61,28 +61,16 @@ def _extract_json_from_text(text: str) -> Optional[dict]:
 
 async def _call_llm_async(system_prompt: str, user_prompt: str) -> Optional[str]:
     """Async LLM call for brief generation."""
-    from llm_fallback import get_llm_config
-
-    _load_env_once()
-    model, api_base, api_key = get_llm_config()
+    from llm_fallback import llm_completion
 
     for attempt in range(MAX_RETRIES):
         try:
-            import litellm
-
             messages = [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ]
 
-            kwargs = dict(model=model, messages=messages, temperature=0.3)
-            if api_base:
-                kwargs["api_base"] = api_base
-            if api_key:
-                kwargs["api_key"] = api_key
-
-            response = await litellm.acompletion(**kwargs)
-            return response.choices[0].message.content
+            return await llm_completion(messages=messages, temperature=0.3)
 
         except Exception as e:
             logger.warning(f"[BriefGenerator] LLM attempt {attempt + 1} failed: {e}")
