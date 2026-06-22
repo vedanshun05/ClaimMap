@@ -1,29 +1,29 @@
-"""LLM client for claim extraction using litellm."""
+"""LLM client for claim extraction using OpenAI SDK (OpenCode Zen)."""
 
 import os
 import json
 from typing import Any
+from openai import OpenAI
 
-from src.shared.config import config, api_config
+from src.shared.config import config
 
 
 class LLMClient:
-    """Client for LLM calls via litellm."""
+    """Client for LLM calls via OpenAI (or compatible) API."""
 
     def __init__(self, model: str | None = None):
-        self.model = model or config.default_model or "nvidia/nim/gemini-2.0-flash"
+        self.model = model or config.default_model or "openai/deepseek-v4-flash-free"
         self._client = None
 
     def _get_client(self):
-        """Get or create litellm client."""
-        if self._client is None:
-            try:
-                import litellm
-                litellm.drop_params = True
-                self._client = litellm
-            except ImportError:
-                raise ImportError("litellm not installed. Run: pip install litellm")
+        """Get or create the OpenAI client.
 
+        We look for ``OPENAI_API_KEY`` first, then ``OPENCODE_API_KEY`` for
+        backwards compatibility.
+        """
+        if self._client is None:
+            api_key = os.getenv("OPENAI_API_KEY") or os.getenv("OPENCODE_API_KEY")
+            self._client = OpenAI(api_key=api_key or "dummy")
         return self._client
 
     def generate(self, prompt: str, system_prompt: str | None = None, **kwargs) -> str:
@@ -33,7 +33,7 @@ class LLMClient:
         Args:
             prompt: User prompt
             system_prompt: Optional system prompt
-            **kwargs: Additional litellm parameters
+            **kwargs: Additional parameters for chat.completions.create
 
         Returns:
             Generated text
@@ -45,10 +45,6 @@ class LLMClient:
             messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": prompt})
 
-        api_key = api_config.get_litellm_key()
-        if api_key:
-            os.environ["NVIDIA_API_KEY"] = api_key
-
         try:
             response = client.chat.completions.create(
                 model=self.model,
@@ -56,17 +52,6 @@ class LLMClient:
                 **kwargs,
             )
             return response.choices[0].message.content
-        except AttributeError:
-            try:
-                response = client.completion(
-                    model=self.model,
-                    messages=messages,
-                    **kwargs,
-                )
-                return response.choices[0].message.content
-            except Exception as e:
-                print(f"[LLM Client] Error: {e}")
-                return ""
         except Exception as e:
             print(f"[LLM Client] Error: {e}")
             return ""
@@ -78,7 +63,7 @@ class LLMClient:
         Args:
             prompt: User prompt
             system_prompt: Optional system prompt
-            **kwargs: Additional litellm parameters
+            **kwargs: Additional parameters for chat.completions.create
 
         Returns:
             Parsed JSON response, or None if parsing fails

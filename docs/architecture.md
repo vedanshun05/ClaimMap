@@ -32,7 +32,7 @@ User Query/PDFs
 - **Pydantic** - Data validation using Python type annotations
 - **SQLite** - Lightweight database for paper/claim storage
 - **PyMuPDF** - PDF text extraction
-- **litellm** - Unified interface for LLM providers (NVIDIA NIM, Gemini)
+- **openai** - OpenAI SDK for LLM calls (OpenCode Zen API, OpenAI-compatible)
 
 ### Frontend
 - **React 18** - UI library

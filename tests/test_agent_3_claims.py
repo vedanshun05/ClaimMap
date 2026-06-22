@@ -33,9 +33,9 @@ class TestLLMClient:
         result = client._extract_json(text)
         assert result == '{"direct": "json"}'
 
-    @pytest.mark.skip(reason="litellm API structure varies by version")
+    @pytest.mark.skip(reason="requires live API key")
     def test_generate_with_mock(self):
-        """Test generation with mocked litellm."""
+        """Test generation with mocked LLM client."""
         pass
 
 

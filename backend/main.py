@@ -54,58 +54,33 @@ async def health():
 
 @app.get("/api/debug")
 async def debug():
-    """Temporary debug endpoint to inspect environment variables and test LLM connectivity."""
-    import os
-    import litellm
-    from pathlib import Path
+    """Debug endpoint to inspect environment variables and test LLM connectivity."""
+    from openai import AsyncOpenAI
 
-    opencode_key = os.getenv("OPENCODE_API_KEY")
-    nvidia_key = os.getenv("NVIDIA_NIM_API_KEY")
-    gemini_key = os.getenv("GEMINI_API_KEY")
-    default_model = os.getenv("DEFAULT_MODEL", "openai/deepseek-v4-flash-free")
+    api_key = os.getenv("OPENAI_API_KEY") or os.getenv("OPENCODE_API_KEY")
+    default_model = os.getenv("DEFAULT_MODEL", "gpt-4.1-mini")
 
-    opencode_test = None
-    nvidia_test = None
+    llm_test = None
     test_error = None
 
-    # Test OpenCode Zen
-    if opencode_key:
+    if api_key:
         try:
-            response = await litellm.acompletion(
-                model="openai/deepseek-v4-flash-free",
-                api_base="https://opencode.ai/zen/v1",
-                api_key=opencode_key,
+            client = AsyncOpenAI(api_key=api_key)
+            response = await client.chat.completions.create(
+                model=default_model,
                 messages=[{"role": "user", "content": "Say hello in 3 words"}],
                 temperature=0.1,
-                timeout=15.0
+                timeout=15.0,
             )
-            opencode_test = response.choices[0].message.content
+            llm_test = response.choices[0].message.content
         except Exception as e:
             test_error = str(e)
 
-    # Test NVIDIA fallback (backward compat)
-    if nvidia_key and not opencode_test:
-        try:
-            os.environ["NVIDIA_API_KEY"] = nvidia_key
-            response = await litellm.acompletion(
-                model=default_model,
-                messages=[{"role": "user", "content": "Hello"}],
-                temperature=0.1,
-                timeout=15.0
-            )
-            nvidia_test = response.choices[0].message.content
-        except Exception as e:
-            test_error = test_error or str(e)
-
     return {
         "default_model": default_model,
-        "opencode_key_present": bool(opencode_key),
-        "nvidia_key_present": bool(nvidia_key),
-        "gemini_key_present": bool(gemini_key),
-        "opencode_key_prefix": opencode_key[:8] + "..." if opencode_key else None,
-        "opencode_test": opencode_test,
-        "nvidia_test": nvidia_test,
-        "test_error": test_error
+        "api_key_present": bool(api_key),
+        "llm_test": llm_test,
+        "test_error": test_error,
     }
 
 

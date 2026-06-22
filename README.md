@@ -48,11 +48,10 @@ src/
 
 ## API Keys
 
-This project uses **litellm** to interface with NVIDIA NIM / Gemini.
+This project uses the **OpenAI SDK** with **OpenCode Zen** API (`deepseek-v4-flash-free`) as the primary LLM provider.
 
-Get your API keys:
-- [NVIDIA NIM](https://console.nvidia.com/)
-- [Google AI Studio](https://aistudio.google.com/app/apikey)
+Get your API key:
+- [OpenCode Zen](https://opencode.ai)
 
 ## Test Papers
 

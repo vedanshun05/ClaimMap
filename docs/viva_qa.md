@@ -94,13 +94,13 @@ The validator does not check type correctness - this is delegated to LLM judgmen
 - Vite provides fast HMR for development
 - Strong ecosystem for routing, HTTP clients
 
-### Q: Why litellm?
+### Q: Why the OpenAI SDK (not litellm)?
 
 **A:**
-- Unified interface for multiple LLM providers
-- Easy fallback between NVIDIA NIM and Gemini
-- Standard OpenAI-compatible API
-- No need to rewrite code when switching models
+- We use a single LLM provider (OpenCode Zen), so litellm's multi-provider abstraction is unnecessary
+- Direct OpenAI SDK is simpler, has fewer dependencies, and is faster
+- OpenCode Zen uses an OpenAI-compatible API, so `AsyncOpenAI(client)` works directly
+- Shared `llm_completion()` in `llm_fallback.py` centralizes the call pattern
 
 ### Q: Why SQLite over other databases?
 
@@ -133,7 +133,7 @@ The validator does not check type correctness - this is delegated to LLM judgmen
 
 **A:**
 - arXiv: 1 req/3 sec - implemented with delay
-- Gemini: 60 req/min - litellm handles automatically
+- Retry with exponential backoff on 429 responses
 - Exponential backoff on 429 responses
 - In-memory cache for repeated queries
 
